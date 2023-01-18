@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <set>
+#include <unordered_map>
+#include <vector>
+#include <utility>
 #include "Calculator.h"
 #include "Data_manager.h"
 
@@ -45,6 +47,6 @@ int main()
     std::cout << "==========\n";
     std::cout << r.getDataOutput(2) << '\n';
     std::cout << "==========\n";
-    r.mostPopularKeyToFind();
+    std::cout << r.mostPopularKeyToFind();
     return 0;
 }

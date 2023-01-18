@@ -2,7 +2,9 @@
 #include <string>
 #include <iostream>
 #include <map>
-#include <set>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 template <typename T>
 class Data_manager
@@ -29,7 +31,7 @@ public:
 		auto it = _data.find(id);
 		if (it != _data.end())
 		{
-			_key_counter.insert({ id });
+			_key_counter.push_back({ id });
 			_data.at(id) = data;
 		}
 		else
@@ -40,7 +42,7 @@ public:
 		auto it = _data.find(id);
 		if (it != _data.end())
 		{
-			_key_counter.insert({ id });
+			_key_counter.push_back({ id });
 			_data.erase(id);
 		}
 		else
@@ -51,7 +53,7 @@ public:
 		auto it = _data.find(id);
 		if (it != _data.end())
 		{
-			_key_counter.insert({ id });
+			_key_counter.push_back({ id });
 			std::cout << "Element ¹ " << id << " = " << it->second << '\n';
 		}
 		else
@@ -62,22 +64,34 @@ public:
 		auto it = _data.find(id);
 		if (it != _data.end())
 		{
-			_key_counter.insert({ id });
+			_key_counter.push_back({ id });
 			return _data.at(id);
 		}
 		else
-			std::cout << "Opss your elements not founded!\n";
+			return " your elements wrong!\n";
 	}
-	void mostPopularKeyToFind() 
+	int mostPopularKeyToFind() 
 	{
-		for (std::multiset<int>::iterator it = _key_counter.begin(); it != _key_counter.end(); it++)
+		std::unordered_map<int, int> keyPop;
+		for (size_t i = 0; i < _key_counter.size(); i++)
 		{
-			std::cout << "\n\nElement: " << *it;
-			auto a = _key_counter.count(*it);
-			std::cout << "\nEgo kolichestvo: " << a;
+			const auto& [it, isInserted] = keyPop.insert({ _key_counter[i], 1 });
+			if (!isInserted)
+			{
+				auto value = it->second;
+				value++;
+				keyPop[_key_counter[i]] = value;
+			}
 		}
+		std::pair<int, int> key_biggestValue = { 0,0 };
+		for (std::unordered_map<int,int>::const_iterator it = keyPop.begin(); it != keyPop.end(); it++)
+		{
+			if (key_biggestValue.second < it->second)
+				key_biggestValue = std::make_pair(it->first, it->second);
+		}
+		return key_biggestValue.first; 
 	}
 private:
 	std::map<int, T> _data;
-	std::multiset<int> _key_counter;
+	std::vector<int> _key_counter;
 };
